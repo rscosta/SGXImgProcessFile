@@ -63,6 +63,9 @@ int rotateImage(sgx_enclave_id_t eid, const char* input, const char* output, int
 
     fwrite(outBuffer, fsize, 1, ofp);
 
+    free(inBuffer);
+    free(outBuffer);
+
     fclose(ifp);
     fclose(ofp);
 
@@ -108,6 +111,9 @@ int mirrorImage(sgx_enclave_id_t eid, const char* input, const char* output)
     end_time();
 
     fwrite(outBuffer, fsize, 1, ofp);
+
+    free(inBuffer);
+    free(outBuffer);
 
     fclose(ifp);
     fclose(ofp);

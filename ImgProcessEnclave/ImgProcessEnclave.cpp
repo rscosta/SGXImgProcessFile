@@ -23,7 +23,8 @@ void sgxRotateImageRight(unsigned char *inBuffer, size_t inBufferSize, unsigned 
 
 	int i = 0, j = 0, last_offset = 0, offset = 0;
 	unsigned char _outBuffer[outBufferSize];
-	
+
+	// extract bmp image header
 	for(i=0;i<54;i++)
 	{									
 		_outBuffer[i] = inBuffer[i];								
@@ -84,6 +85,7 @@ void sgxRotateImage180(unsigned char *inBuffer, size_t inBufferSize, unsigned ch
 	int i = 0, j = 0, last_offset = 0, offset = 0;
 	unsigned char _outBuffer[outBufferSize];
 	
+	// extract bmp image header
 	for(i=0;i<54;i++)
 	{									
 		_outBuffer[i] = inBuffer[i];								
@@ -122,7 +124,7 @@ void sgxRotateImage180(unsigned char *inBuffer, size_t inBufferSize, unsigned ch
 
 	offset = last_offset;
 	
-        //to rotate left
+        //to rotate 180 degree
 	for(i=0;i<width;i++)
 	{
 		for(j=0;j<height;j++)
@@ -144,6 +146,7 @@ void sgxMirrorImage(unsigned char *inBuffer, size_t inBufferSize, unsigned char 
 	int i = 0, j = 0, last_offset = 0, offset = 0;
 	unsigned char _outBuffer[outBufferSize];
 	
+	// extract bmp image header
 	for(i=0;i<54;i++)
 	{									
 		_outBuffer[i] = inBuffer[i];								
@@ -182,7 +185,7 @@ void sgxMirrorImage(unsigned char *inBuffer, size_t inBufferSize, unsigned char 
 
 	offset = last_offset;
 	
-        //to rotate left
+        //to mirror image
 	for(i=0;i<width;i++)
 	{
 		for(j=0;j<height;j++)
