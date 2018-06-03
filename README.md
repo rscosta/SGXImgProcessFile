@@ -70,4 +70,4 @@ To Rotate Image in 180 degree, enter the following command:
 ```
 $ ./sgxImgProcessFile -r 180 -i [INPUT_FILE] -o [OUTPUT_FILE]
 ```
-There are images examples into images/ folder.
+There are images samples into images/ folder.
