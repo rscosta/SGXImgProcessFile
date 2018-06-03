@@ -1,0 +1,14 @@
+enclave {
+    trusted {
+
+        public void sgxRotateImageRight([in,size=inBufferSize] unsigned char *inBuffer, size_t inBufferSize, [out,size=outBufferSize] unsigned char *outBuffer, size_t outBufferSize);
+
+        public void sgxRotateImage180([in,size=inBufferSize] unsigned char *inBuffer, size_t inBufferSize, [out,size=outBufferSize] unsigned char *outBuffer, size_t outBufferSize);
+
+        public void sgxMirrorImage([in,size=inBufferSize] unsigned char *inBuffer, size_t inBufferSize, [out,size=outBufferSize] unsigned char *outBuffer, size_t outBufferSize);
+        };
+
+    untrusted {
+        [cdecl] void printDebug([string,in] const char *str);
+    };
+};
