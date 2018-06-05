@@ -122,6 +122,55 @@ int mirrorImage(sgx_enclave_id_t eid, const char* input, const char* output)
     printf("[MIRROR] Final image process time: %6.6f seconds.\n", secs);
 }
 
+int negativeImage(sgx_enclave_id_t eid, const char* input, const char* output)
+{
+    FILE *ifp = NULL;
+    FILE *ofp = NULL;
+    size_t fpRes = 0;
+    
+    if((ifp = fopen(input, "r")) == NULL)
+    {
+      printf("[NEGATIVE] Input File %s not found!\n",input);
+      return -1;
+    }
+
+    if((ofp = fopen(output, "w+")) == NULL)
+    {
+      printf("[NEGATIVE] Error while creating output File %s\n",output);
+      fclose(ifp);
+      return -1;
+    }
+
+    fseek(ifp, 0, SEEK_END);
+    
+    long fsize = ftell(ifp);
+    
+    fseek(ifp, 0, SEEK_SET);  //same as rewind(f);
+    
+    unsigned char *inBuffer = (unsigned char*)malloc(fsize + 1);
+
+    unsigned char *outBuffer = (unsigned char*)malloc(fsize + 1);
+    
+    size_t readRes = fread(inBuffer, fsize, 1, ifp);
+    
+    start_time();
+
+    sgxNegativeImage(eid, inBuffer, fsize, outBuffer, fsize);
+    
+    end_time();
+
+    fwrite(outBuffer, fsize, 1, ofp);
+
+    free(inBuffer);
+    free(outBuffer);
+
+    fclose(ifp);
+    fclose(ofp);
+
+    printf("[NEGATIVE] Negative image file (%s) created!\n",output);
+    printf("[NEGATIVE] Final image process time: %6.6f seconds.\n", secs);
+}
+
 void printDebug(const char *buf)
 {
     printf("ENCLAVE: %s\n", buf);
@@ -134,6 +183,7 @@ void printAppUsage()
     printf("Options:\n");
     printf(" -r\trotate mode [right | 180]\n");
     printf(" -m\tmirror mode\n");
+    printf(" -n\tnegative mode\n");
     printf(" -i\tinput file\n");
     printf(" -o\toutput file\n");
     printf("Example (Rotate 180): sgxImgProcessFile -r 180 -i [INPUT_FILE] -o [OUTPUT_FILE]\n");
@@ -148,7 +198,7 @@ int main(int argc, char *argv[])
     char outFileName[MAX_FILE_NAME_SIZE];
     
     // Specifying the expected options 
-    while ((option = getopt(argc, argv,"mr:i:o:")) != -1) {
+    while ((option = getopt(argc, argv,"mnr:i:o:")) != -1) {
         switch (option) {
 	  case 'r' : 
 	              if(optarg == NULL)
@@ -165,6 +215,10 @@ int main(int argc, char *argv[])
                 break;
           case 'm' : 
                       mode = 3; /*Mirror Mode */
+		      n_modes++;
+                break;
+          case 'n' : 
+                      mode = 4; /*Negative Mode */
 		      n_modes++;
                 break;
 	  case 'i' : 
@@ -214,6 +268,9 @@ int main(int argc, char *argv[])
 	break;
       case 3:
 	  mirrorImage(eid, inFileName, outFileName);
+	break;
+      case 4:
+	  negativeImage(eid, inFileName, outFileName);
 	break;
     }
     

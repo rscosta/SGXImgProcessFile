@@ -6,6 +6,9 @@ enclave {
         public void sgxRotateImage180([in,size=inBufferSize] unsigned char *inBuffer, size_t inBufferSize, [out,size=outBufferSize] unsigned char *outBuffer, size_t outBufferSize);
 
         public void sgxMirrorImage([in,size=inBufferSize] unsigned char *inBuffer, size_t inBufferSize, [out,size=outBufferSize] unsigned char *outBuffer, size_t outBufferSize);
+        
+        public void sgxNegativeImage([in,size=inBufferSize] unsigned char *inBuffer, size_t inBufferSize, [out,size=outBufferSize] unsigned char *outBuffer, size_t outBufferSize);
+
         };
 
     untrusted {

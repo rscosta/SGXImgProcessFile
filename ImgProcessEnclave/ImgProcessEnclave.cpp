@@ -199,3 +199,64 @@ void sgxMirrorImage(unsigned char *inBuffer, size_t inBufferSize, unsigned char 
 	printf("MIRROR IMAGE DONE!");
 }
 
+void sgxNegativeImage(unsigned char *inBuffer, size_t inBufferSize, unsigned char *outBuffer, size_t outBufferSize)
+{
+
+	printf("NEGATIVE IMAGE INIT...");
+
+	int i = 0, j = 0, last_offset = 0, offset = 0;
+	unsigned char _outBuffer[outBufferSize];
+	
+	// extract bmp image header
+	for(i=0;i<54;i++)
+	{									
+		_outBuffer[i] = inBuffer[i];								
+	}
+
+	offset = i;
+	
+	// extract image height, width and bitDepth from imageHeader 
+	int height = *(int*)&_outBuffer[18];
+	int width = *(int*)&_outBuffer[22];
+	int bitDepth = *(int*)&_outBuffer[28];
+	unsigned char _imgInBuffer[width][height];
+
+	printf("Width=%d Height=%d bitDepth=%d\n\n", width, height, bitDepth);
+
+	//if ColorTable present, extract it.
+	if(bitDepth <= 8) 
+	{
+	  	for(i=0;i<1024;i++)
+		{
+		  _outBuffer[offset] = inBuffer[offset];
+		  offset++;
+		}
+	}
+
+	last_offset = offset;
+	
+	// copying 1D to 2D array
+	for(i=0;i<width;i++)
+	{
+	  for(j=0;j<height;j++)
+	  {
+            _imgInBuffer[i][j]=inBuffer[offset++];  
+	  }
+	}
+
+	offset = last_offset;
+	
+        //negative image
+	for(i=0;i<width;i++)
+	{
+		for(j=0;j<height;j++)
+		{
+			_outBuffer[offset++] = 255 - _imgInBuffer[i][j];
+		}
+	}
+
+	memcpy(outBuffer, _outBuffer, outBufferSize);
+
+	printf("NEGATIVE IMAGE DONE!");
+}
+
